@@ -118,10 +118,12 @@ module OmniAuth
 
         options.issuer = issuer if options.issuer.nil? || options.issuer.empty?
 
-        decode_id_token(params['id_token'])
-          .verify! issuer: options.issuer,
-                   client_id: client_options.identifier,
-                   nonce: stored_nonce
+        if params['id_token']
+          decode_id_token(params['id_token'])
+            .verify! issuer: options.issuer,
+                    client_id: client_options.identifier,
+                    nonce: stored_nonce
+        end
 
         discover!
         client.redirect_uri = redirect_uri
