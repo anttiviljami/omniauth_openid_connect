@@ -51,7 +51,7 @@ Configuration details:
   * `response_type` tells the authorization server which grant type the application wants to use,
   currently, only `:code` (Authorization Code grant) and `:id_token` (Implicit grant) are valid.
   * If you want to pass `state` paramete by yourself. You can set Proc Object.
-  e.g. `state: Proc.new { SecureRandom.hex(32) }`
+  e.g. `state: Proc.new { SecureRandom.hex(32) }`. You can specify `false` to not send the state parameter at all
   * `nonce` is optional. If don't want to pass "nonce" parameter to provider, You should specify
   `false` to `send_nonce` option. (default true)
   * Support for other client authentication methods. If don't specified

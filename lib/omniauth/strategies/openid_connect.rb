@@ -108,11 +108,13 @@ module OmniAuth
       def callback_phase
         error = params['error_reason'] || params['error']
         error_description = params['error_description'] || params['error_reason']
-        invalid_state = params['state'].to_s.empty? || params['state'] != stored_state
 
         raise CallbackError.new(params['error'], error_description, params['error_uri']) if error
 
-        raise CallbackError, 'Invalid state parameter' if invalid_state
+        unless options.state === false
+          invalid_state = params['state'].to_s.empty? || params['state'] != stored_state
+          raise CallbackError, 'Invalid state parameter' if invalid_state
+        end
 
         return unless valid_response_type?
 
@@ -225,6 +227,8 @@ module OmniAuth
       end
 
       def new_state
+        return nil if options.state === false
+
         state = if options.state.respond_to?(:call)
                   if options.state.arity == 1
                     options.state.call(env)
@@ -232,6 +236,7 @@ module OmniAuth
                     options.state.call
                   end
                 end
+
         session['omniauth.state'] = state || SecureRandom.hex(16)
       end
 
